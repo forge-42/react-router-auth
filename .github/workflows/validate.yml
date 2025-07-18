@@ -1,0 +1,69 @@
+name: 🚀 Validation Pipeline
+concurrency:
+  group: ${{ github.repository }}-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+permissions:
+  actions: write
+  contents: read
+  # Required to put a comment into the pull-request
+  pull-requests: write
+jobs:
+  lint:
+    name: ⬣ Biome lint
+    runs-on: ubuntu-latest
+    steps:
+     - uses: actions/checkout@v4
+     - uses: biomejs/setup-biome@v2
+     - run: biome ci . --reporter=github
+
+  typecheck:
+    needs: lint
+    name: 🔎 Type check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: "package.json"
+          cache: "pnpm"
+      - run: pnpm install --prefer-offline --frozen-lockfile
+      - run: pnpm run typecheck
+
+  check-unused:
+    needs: lint
+    name: ✂️ Check unused code
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: "package.json"
+          cache: "pnpm"
+      - run: pnpm install --prefer-offline --frozen-lockfile
+      - run: pnpm run check:unused
+
+  vitest:
+    needs: typecheck
+    name: ⚡ Unit Tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: "package.json"
+          cache: "pnpm"
+      - run: pnpm install --prefer-offline --frozen-lockfile
+      - run: pnpm exec playwright install chromium --with-deps
+      - run: pnpm run test:cov
+      - name: "Report Coverage"
+        # Only works if you set `reportOnFailure: true` in your vite config as specified above
+        if: always()
+        uses: davelosert/vitest-coverage-report-action@v2

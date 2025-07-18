@@ -1,7 +1,7 @@
 {
 	"$schema": "./node_modules/@biomejs/biome/configuration_schema.json",
 	"files": {
-		"includes": ["**", "!**/app/library/icon/**/*"]
+		"includes": ["**", "!**/app/library/icon/**/*", "!**/app/generated/**/*"]
 	},
 	"vcs": {
 		"enabled": true,

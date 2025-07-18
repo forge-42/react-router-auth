@@ -1,0 +1,12 @@
+# The containers that compose the project
+services:
+  db:
+    image: postgres:16.4
+    restart: always
+    container_name: base-stack-db
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: prisma
+      POSTGRES_PASSWORD: prisma
+      POSTGRES_DB: local_db

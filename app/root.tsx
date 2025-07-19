@@ -35,7 +35,7 @@ export default function App({ loaderData }: Route.ComponentProps) {
 export const Layout = ({ children }: { children: React.ReactNode }) => {
 	const { i18n } = useTranslation()
 	return (
-		<html className="overflow-y-auto overflow-x-hidden" lang={i18n.language} dir={i18n.dir()}>
+		<html className="h-full overflow-y-auto overflow-x-hidden" lang={i18n.language} dir={i18n.dir()}>
 			<head>
 				<ClientHintCheck />
 				<meta charSet="utf-8" />
@@ -43,7 +43,7 @@ export const Layout = ({ children }: { children: React.ReactNode }) => {
 				<Meta />
 				<Links />
 			</head>
-			<body className="h-full w-full">
+			<body className="h-full w-full overflow-y-auto">
 				<LanguageSwitcher />
 				{children}
 				<ScrollRestoration />

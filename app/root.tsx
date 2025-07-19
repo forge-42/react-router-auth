@@ -3,7 +3,6 @@ import type { LinksFunction } from "react-router"
 import { isRouteErrorResponse, Links, Meta, Outlet, Scripts, ScrollRestoration, useRouteError } from "react-router"
 import { useChangeLanguage } from "remix-i18next/react"
 import type { Route } from "./+types/root"
-import { LanguageSwitcher } from "./library/language-switcher"
 import { globalAppContext } from "./server/context"
 import { ClientHintCheck, getHints } from "./services/client-hints"
 import tailwindcss from "./tailwind.css?url"
@@ -44,7 +43,6 @@ export const Layout = ({ children }: { children: React.ReactNode }) => {
 				<Links />
 			</head>
 			<body className="h-full w-full overflow-y-auto">
-				<LanguageSwitcher />
 				{children}
 				<ScrollRestoration />
 				<Scripts />

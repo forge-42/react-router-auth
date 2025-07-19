@@ -4,7 +4,7 @@
 	"remix": true,
 	"lefthook": true,
 	"project": ["**/*.{js,cjs,mjs,jsx,ts,cts,mts,tsx}"],
-	"ignore": ["app/library/icon/icons/types.ts", "react-router.config.ts", "app/generated/**/*"],
+	"ignore": ["app/library/icon/icons/types.ts", "**/ui/**/*", "react-router.config.ts", "app/generated/**/*"],
 	"ignoreDependencies": [
 		"@babel/preset-typescript",
 		"tw-animate-css",

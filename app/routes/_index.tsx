@@ -1,5 +1,5 @@
 import { useTranslation } from "react-i18next"
-import type { MetaFunction } from "react-router"
+import { type MetaFunction, redirect } from "react-router"
 import { convertDateToUserTz } from "~/utils/dates"
 import type { Route } from "./+types/_index"
 
@@ -8,10 +8,8 @@ export const meta: MetaFunction = () => {
 }
 
 export const loader = ({ request }: Route.LoaderArgs) => {
-	const timezoneDate = convertDateToUserTz(new Date(), request)
-	return {
-		timezoneDate: timezoneDate.toTimeString(),
-	}
+	const _timezoneDate = convertDateToUserTz(new Date(), request)
+	throw redirect("/login")
 }
 
 export default function Index({ loaderData }: Route.ComponentProps) {

@@ -16,6 +16,8 @@
 		"forceConsistentCasingInFileNames": true,
 		"baseUrl": ".",
 		"paths": {
+			"@domain/*": ["./app/domain/*"],
+			"@prisma-generated/*": ["./app/generated/prisma/*"],
 			"~/*": ["./app/*"]
 		},
 		"rootDirs": [".", "./.react-router/types"],

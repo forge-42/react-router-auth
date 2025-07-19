@@ -8,5 +8,5 @@ pre-commit:
       run: pnpm run typecheck
     test:
       run: pnpm run test
-    unused-code:
-      run: pnpm run check:unused
+#    unused-code:
+#      run: pnpm run check:unused

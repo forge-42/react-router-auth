@@ -1,3 +1,5 @@
+import { requireUser } from "@domain/auth/auth.server"
+import { getUser } from "@domain/utils/global-context"
 import { AppSidebar } from "~/components/app-sidebar"
 import { ChartAreaInteractive } from "~/components/chart-area-interactive"
 import { DataTable } from "~/components/data-table"
@@ -5,12 +7,14 @@ import { SectionCards } from "~/components/section-cards"
 import { SiteHeader } from "~/components/site-header"
 import { SidebarInset, SidebarProvider } from "~/components/ui/sidebar"
 import data from "~/dashboard/data.json"
-
 import type { Route } from "./+types/dashboard"
 
 export const loader = async () => {
-	return { data }
+	const user = getUser()
+	return { data, user }
 }
+
+export const unstable_middleware = [requireUser]
 
 export default function Page({ loaderData }: Route.ComponentProps) {
 	const { data } = loaderData

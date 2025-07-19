@@ -1,30 +1,28 @@
+import { registerFormSchema } from "@domain/auth/register.schema"
+import { registerUser } from "@domain/auth/user.server"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { Form } from "react-router"
+import { Form, href, redirect } from "react-router"
 import { getValidatedFormData, useRemixForm } from "remix-hook-form"
-import { z } from "zod/v4"
 import { Button } from "~/components/ui/button"
 import { Input, InputError, InputField } from "~/components/ui/input"
 import type { Route } from "./+types/_auth.register"
 
-const registerFormSchema = z
-	.object({
-		email: z.email(),
-		password: z.string().min(8).max(100),
-		confirmPassword: z.string().min(8).max(100),
-	})
-	.refine((data) => data.password === data.confirmPassword, {
-		message: "Passwords don't match",
-		path: ["confirmPassword"],
-	})
-
 const resolver = zodResolver(registerFormSchema)
 
 export const action = async ({ request }: Route.ActionArgs) => {
-	const { errors } = await getValidatedFormData(request, resolver)
+	const { errors, data } = await getValidatedFormData(request, resolver)
 	if (errors) {
 		return { errors }
 	}
-	return null
+	const { errors: registrationErrors } = await registerUser(data)
+
+	if (registrationErrors) {
+		return {
+			errors: registrationErrors,
+		}
+	}
+
+	return redirect(href("/dashboard"))
 }
 
 export default function RegisterRoute() {

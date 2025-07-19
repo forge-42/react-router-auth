@@ -1,5 +1,7 @@
+import { authSessionMiddleware } from "@domain/auth/auth.server"
+import { getOptionalUser, globalStorageMiddleware } from "@domain/utils/global-context"
 import { useTranslation } from "react-i18next"
-import type { LinksFunction } from "react-router"
+import type { LinksFunction, unstable_MiddlewareFunction } from "react-router"
 import { isRouteErrorResponse, Links, Meta, Outlet, Scripts, ScrollRestoration, useRouteError } from "react-router"
 import { useChangeLanguage } from "remix-i18next/react"
 import type { Route } from "./+types/root"
@@ -9,8 +11,9 @@ import tailwindcss from "./tailwind.css?url"
 
 export async function loader({ context, request }: Route.LoaderArgs) {
 	const { lang, clientEnv } = context.get(globalAppContext)
+	const user = getOptionalUser()
 	const hints = getHints(request)
-	return { lang, clientEnv, hints }
+	return { lang, clientEnv, hints, user }
 }
 
 export const links: LinksFunction = () => [{ rel: "stylesheet", href: tailwindcss }]
@@ -84,3 +87,5 @@ export const ErrorBoundary = () => {
 		</div>
 	)
 }
+// @ts-expect-error
+export const unstable_middleware: unstable_MiddlewareFunction[] = [authSessionMiddleware, globalStorageMiddleware]

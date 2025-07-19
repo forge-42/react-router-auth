@@ -1,27 +1,28 @@
+import { loginFormSchema } from "@domain/auth/login.schema"
+import { loginUser } from "@domain/auth/user.server"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { Form, href } from "react-router"
+import { Form, href, redirect } from "react-router"
 import { getValidatedFormData, useRemixForm } from "remix-hook-form"
-import { z } from "zod/v4"
 import { Button } from "~/components/ui/button"
 import { Input, InputError, InputField } from "~/components/ui/input"
 import { Link } from "~/library/link"
 import type { Route } from "./+types/_auth.login"
 
-const loginFormSchema = z.object({
-	email: z.email(),
-	password: z.string().min(8).max(100),
-	redirectTo: z.string().optional(),
-})
-
 const resolver = zodResolver(loginFormSchema)
 
 export const action = async ({ request }: Route.ActionArgs) => {
-	const { errors } = await getValidatedFormData(request, resolver)
+	const { errors, data } = await getValidatedFormData(request, resolver)
 	if (errors) {
 		return { errors }
 	}
-	// your implementation here
-	return null
+	const { errors: loginErrors } = await loginUser(data)
+	if (loginErrors) {
+		return {
+			errors: loginErrors,
+		}
+	}
+
+	return redirect(href("/dashboard"))
 }
 
 export default function LoginRoute() {

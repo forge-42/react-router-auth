@@ -39,7 +39,7 @@ export const getUser = () => {
 	return user
 }
 
-export const globalStorageMiddleware: unstable_MiddlewareFunction = async ({ context }, next) => {
+export const globalStorageMiddleware: unstable_MiddlewareFunction<Response> = async ({ context }, next) => {
 	const authSession = getAuthSessionFromContext(context)
 	const userData = authSession.get("user")
 	const user = userData?.email ? await getUserByEmail(userData.email) : null

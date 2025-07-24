@@ -87,5 +87,7 @@ export const ErrorBoundary = () => {
 		</div>
 	)
 }
-// @ts-expect-error
-export const unstable_middleware: unstable_MiddlewareFunction[] = [authSessionMiddleware, globalStorageMiddleware]
+export const unstable_middleware: unstable_MiddlewareFunction<Response>[] = [
+	authSessionMiddleware,
+	globalStorageMiddleware,
+]
